@@ -707,74 +707,18 @@
         Permis de grimper 2GT — Application tactile responsive adaptative EPS Android & Web
     </footer>
 
-     <script type="module">
-           import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    <script>
+        const STORAGE_KEY = 'permis_grimper_2gt_data_v2';
+        let studentsData = [];
 
-    // Configuration Firebase pour permis-grim
-    const firebaseConfig = {
-        apiKey: "VOTRE_API_KEY", // À copier depuis votre console Firebase
-        authDomain: "permis-grim.firebaseapp.com",
-        projectId: "permis-grim",
-        storageBucket: "permis-grim.appspot.com",
-        messagingSenderId: "748770882217",
-        appId: "VOTRE_APP_ID" // À copier depuis votre console Firebase
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const classDocRef = doc(db, "classes", "2GT");
-
-    const STORAGE_KEY = 'permis_grimper_2gt_data_v2';
-    let studentsData = [];
-
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('btn-add-student').addEventListener('click', () => addStudentRow(''));
-        document.getElementById('btn-import').addEventListener('click', () => document.getElementById('file-input').click());
-        document.getElementById('file-input').addEventListener('change', importStudentsList);
-        document.getElementById('btn-export-open').addEventListener('click', openExportModal);
-        document.getElementById('btn-export-cancel').addEventListener('click', closeExportModal);
-        document.getElementById('btn-export-confirm').addEventListener('click', confirmExportCSV);
-        document.getElementById('btn-clear-all').addEventListener('click', clearAllData);
-
-        loadFromStorage();
-    });
-
-    async function saveToStorage() {
-        try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(studentsData));
-            updateStats();
-            // Sauvegarde asynchrone sur Firestore
-            await setDoc(classDocRef, { students: studentsData });
-        } catch(e) {
-            console.warn("Firestore inaccessible, sauvegarde locale uniquement.");
-        }
-    }
-
-    async function loadFromStorage() {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-            try {
-                studentsData = JSON.parse(saved);
-                renderTable();
-            } catch(e) { studentsData = []; }
-        }
-        try {
-            const docSnap = await getDoc(classDocRef);
-            if (docSnap.exists()) {
-                studentsData = docSnap.data().students || [];
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(studentsData));
-                renderTable();
-            } else if (studentsData.length === 0) {
-                addStudentRow('');
-                addStudentRow('');
-                addStudentRow('');
-            }
-        } catch(e) {
-            console.warn("Données chargées depuis le cache local.");
-        }
-    }
-
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('btn-add-student').addEventListener('click', () => addStudentRow(''));
+            document.getElementById('btn-import').addEventListener('click', () => document.getElementById('file-input').click());
+            document.getElementById('file-input').addEventListener('change', importStudentsList);
+            document.getElementById('btn-export-open').addEventListener('click', openExportModal);
+            document.getElementById('btn-export-cancel').addEventListener('click', closeExportModal);
+            document.getElementById('btn-export-confirm').addEventListener('click', confirmExportCSV);
+            document.getElementById('btn-clear-all').addEventListener('click', clearAllData);
 
             loadFromStorage();
             if (studentsData.length === 0) {
@@ -1000,7 +944,6 @@
 
             closeExportModal();
         }
-    <script>
-
+    </script>
 </body>
 </html>
